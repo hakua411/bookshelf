@@ -2,13 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Review;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class ReviewLikeSeeder extends Seeder
 {
-    
     public function run(): void
     {
         // ユーザーをメールアドレスで取得
@@ -26,7 +25,7 @@ class ReviewLikeSeeder extends Seeder
                 ->toArray();
 
             // いいねを登録
-            $review->likedUsers()->syncWithoutDetaching($userIds);
+            $review->likedByUsers()->syncWithoutDetaching($userIds);
         }
     }
 }

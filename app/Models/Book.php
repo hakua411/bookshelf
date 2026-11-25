@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,13 +18,9 @@ class Book extends Model
         'title',
         'author',
         'isbn',
-        'publication_date',
+        'published_date',
         'description',
         'image_url',
-    ];
-
-    protected $casts = [
-        'publication_date' => 'date',
     ];
 
     /**
@@ -56,5 +53,10 @@ class Book extends Model
     public function favoritedUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'favorites');
+    }
+
+    public function getPublishedDateAttribute($value): string
+    {
+        return Carbon::parse($value)->format('Y-m-d');
     }
 }
