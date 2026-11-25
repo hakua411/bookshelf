@@ -1,18 +1,45 @@
 <?php
 
+use App\Http\Controllers\BookController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+// 書籍一覧
+Route::get('/', [BookController::class, 'index'])->name('books.index');
 
-Route::get('/', function () {
-    return view('welcome');
+// 認証が必要なルート
+Route::middleware('auth')->group(function () {
+    Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
+    Route::post('/books', [BookController::class, 'store'])->name('books.store');
+    Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
+    Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
 });
+
+// 書籍詳細
+Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+
+// ランキング（仮登録）
+Route::get('/ranking', function () {
+    return 'ランキング画面';
+})->name('ranking.index');
+
+Route::get('/favorites', function () {
+    return 'お気に入り一覧画面';
+})->middleware('auth')->name('favorites.index');
+
+// ジャンル一覧（仮登録）
+Route::get('/genres', function () {
+    return 'ジャンル一覧画面';
+})->middleware('auth')->name('genres.index');
+
+Route::post('/books/{book}/favorites', function () {
+    return back();
+})->middleware('auth')->name('favorites.toggle');
+
+Route::post('/books/{book}/reviews', function () {
+    return back();
+})->middleware('auth')->name('reviews.store');
+
+Route::post('/reviews/{review}/like', function () {
+    return back();
+})->middleware('auth')->name('reviews.like');
