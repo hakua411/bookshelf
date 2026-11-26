@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 // 書籍一覧
@@ -13,6 +14,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
     Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
     Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+
+    Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])
+        ->name('reviews.edit');
+
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])
+        ->name('reviews.update');
+
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
+        ->name('reviews.destroy');
 });
 
 // 書籍詳細
@@ -36,9 +46,9 @@ Route::post('/books/{book}/favorites', function () {
     return back();
 })->middleware('auth')->name('favorites.toggle');
 
-Route::post('/books/{book}/reviews', function () {
-    return back();
-})->middleware('auth')->name('reviews.store');
+Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])
+    ->middleware('auth')
+    ->name('reviews.store');
 
 Route::post('/reviews/{review}/like', function () {
     return back();
