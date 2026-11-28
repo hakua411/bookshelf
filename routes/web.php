@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReviewLikeController;
 use Illuminate\Support\Facades\Route;
 
 // 書籍一覧
@@ -23,6 +25,18 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
         ->name('reviews.destroy');
+
+    // お気に入り一覧
+    Route::get('/favorites', [FavoriteController::class, 'index'])
+        ->name('favorites.index');
+
+    // お気に入り登録・解除
+    Route::post('/books/{book}/favorites', [FavoriteController::class, 'toggle'])
+        ->name('favorites.toggle');
+
+    // レビューのいいね登録・解除
+    Route::post('/reviews/{review}/like', [ReviewLikeController::class, 'toggle'])
+        ->name('reviews.like');
 });
 
 // 書籍詳細
@@ -33,23 +47,11 @@ Route::get('/ranking', function () {
     return 'ランキング画面';
 })->name('ranking.index');
 
-Route::get('/favorites', function () {
-    return 'お気に入り一覧画面';
-})->middleware('auth')->name('favorites.index');
-
 // ジャンル一覧（仮登録）
 Route::get('/genres', function () {
     return 'ジャンル一覧画面';
 })->middleware('auth')->name('genres.index');
 
-Route::post('/books/{book}/favorites', function () {
-    return back();
-})->middleware('auth')->name('favorites.toggle');
-
 Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])
     ->middleware('auth')
     ->name('reviews.store');
-
-Route::post('/reviews/{review}/like', function () {
-    return back();
-})->middleware('auth')->name('reviews.like');
